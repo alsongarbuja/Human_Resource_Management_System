@@ -4,7 +4,15 @@ from datetime import date
 from core.models import BaseModel
 from organizationmanagement.models import Unit
 
+#
+# * Role Model
 class Role(BaseModel):
+  """
+    This contains the detail about the role in the system
+
+    Fields:
+      = name: char (name of the role)
+  """
   name = models.CharField(max_length=50, unique=True)
   description = models.TextField(blank=True)
 
@@ -16,7 +24,16 @@ class Role(BaseModel):
     verbose_name = "Role"
     verbose_name_plural = "Roles"
 
+#
+# * Empoyee Type Model
 class EmployeeType(BaseModel):
+  """
+    This contains the details about the employee types in the system
+
+    Fields:
+      - name: char (name of the employee type)
+      - description?: text (description of the type of employee)
+  """
   name = models.CharField(max_length=50, unique=True)
   description = models.TextField(blank=True)
 
@@ -28,7 +45,16 @@ class EmployeeType(BaseModel):
     verbose_name = "Employee Type"
     verbose_name_plural = "Employee Types"
 
+#
+# * Pay Frequency
 class PayFrequency(BaseModel):
+  """
+    This contains all information on pay frequency
+
+    Fields:
+      - name: char (name of the pay frequency)
+      - description?: text (description of the type of pay frequency)
+  """
   name = models.CharField(max_length=50, unique=True)
   description = models.TextField(blank=True)
 
@@ -40,7 +66,17 @@ class PayFrequency(BaseModel):
     verbose_name = "Pay Frequency"
     verbose_name_plural = "Pay Frequency"
 
+#
+# * Employee Profile Model
 class EmployeeProfile(BaseModel):
+  """
+    This contains the details that a employee must have in the system
+
+    Fields:
+      - user: FK (a one on one relation with user)
+      - unique_id: PK (a unique number identifying the user)
+      - address?: char (address of the employee)
+  """
   user = models.OneToOneField(
     "auth.User", on_delete=models.CASCADE
   )
@@ -55,7 +91,20 @@ class EmployeeProfile(BaseModel):
     verbose_name = "Employee Profile"
     verbose_name_plural = "Employee Profiles"
 
+#
+# * Job Profile Model
 class JobProfile(BaseModel):
+  """
+    This contains the details that a employee must have in different department
+
+    Fields:
+      - employee: FK (a one on one relation with employee profile)
+      - role: FK (a one on one relation with role)
+      - unit: FK (a one on one relation with unit)
+      - employee_type: FK (a one on one relation with employee type)
+      - pay_frequency: FK (a one on one relation with pay frequency)
+      - tenure: decimal (auto calculated tenure in years of the employee in the current job profile)
+  """
   employee = models.ForeignKey(EmployeeProfile, on_delete=models.CASCADE)
   role = models.ForeignKey(Role, on_delete=models.CASCADE)
   unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
