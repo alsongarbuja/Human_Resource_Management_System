@@ -3,12 +3,42 @@
 {% block title %}Time Clock Management | Login{% endblock title %}
 
 {% block main_content %}
-  <main class="flex items-center justify-center w-full h-screen bg-white text-black">
-    <form class="shadow-md rounded-md border-t-2 border-blue-700 p-4 flex flex-col items-center gap-2">
-      <h3 class="text-3xl font-bold">Login</h3>
-      <p>Welcome back</p>
+  <main class="h-screen flex flex-col justify-center px-8 bg-gray-200">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+      <h2 class="text-center text-3xl font-extrabold tracking-tight text-gray-900">
+        Welcome back
+      </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        Please sign in to your account
+      </p>
+    </div>
 
-      <button type="submit" class="p-2 rounded-sm bg-blue-700 text-white text-center w-full">Login</button>
-    </form>
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div class="bg-white py-8 px-4 shadow-sm border border-gray-100 sm:rounded-xl sm:px-10">
+        <form class="space-y-6" method="POST">
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded">
+              <div class="flex">
+                <div class="text-sm text-red-700">
+                  {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          {% include 'components/input.html'  with id='username' name='username' label='User ID / Username' placeholder='Enter your user ID' required=True error=form.username.errors.0 %}
+          {% include 'components/input.html'  with id='password' name='password' label='Password' type='password' placeholder='Enter your password' required=True error=form.password.errors.0 %}
+
+          <button type="submit"
+              class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-950 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition duration-150 cursor-pointer">
+            Sign In
+          </button>
+        </form>
+      </div>
+    </div>
   </main>
-{% endblock main_content %}
+{% endblock %}
