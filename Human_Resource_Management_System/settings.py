@@ -39,10 +39,14 @@ INSTALLED_APPS = [
   'django.contrib.messages',
   'django.contrib.staticfiles',
 
+  # Installed Apps
+  # 'ninja',
+
   # Created Apps
-  "organizationmanagement",
-  "employeemanagement",
-  "punchmanagement",
+  'core',
+  'organizationmanagement',
+  'employeemanagement',
+  'punchmanagement',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +58,8 @@ MIDDLEWARE = [
   'django.contrib.auth.middleware.AuthenticationMiddleware',
   'django.contrib.messages.middleware.MessageMiddleware',
   'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+  'django.contrib.auth.middleware.LoginRequiredMiddleware',
 
   # Custom built Middlewares
 ]
@@ -86,16 +92,16 @@ DATABASES = {
   #   'ENGINE': 'django.db.backends.sqlite3',
   #   'NAME': BASE_DIR / 'db.sqlite3',
   # },
-  "default": {
-    "ENGINE": "django.db.backends.mysql",
-    "NAME": "hrms_db",
-    "USER": "root",
-    "PASSWORD": "asdfAsdf#90",
-    "HOST": "localhost",
-    "PORT": "3306",
-    "OPTIONS": {
-      "charset": "utf8mb4",
-      "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
+  'default': {
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME': 'hrms_db',
+    'USER': 'root',
+    'PASSWORD': 'asdfAsdf#90',
+    'HOST': 'localhost',
+    'PORT': '3306',
+    'OPTIONS': {
+      'charset': 'utf8mb4',
+      'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
     },
   }
 }
@@ -118,6 +124,10 @@ AUTH_PASSWORD_VALIDATORS = [
     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
   },
 ]
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'login'
 
 
 # Internationalization
