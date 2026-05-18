@@ -16,6 +16,7 @@ class Department(BaseModel):
 
 class Unit(BaseModel):
   name = models.CharField(max_length=50, unique=True)
+  index = models.CharField(max_length=6, blank=True)
   description = models.TextField(blank=True)
   department = models.ForeignKey(Department, on_delete=models.CASCADE)
 
