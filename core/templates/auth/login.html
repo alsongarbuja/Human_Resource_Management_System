@@ -1,6 +1,11 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Time Clock Management | Login{% endblock title %}
+
+{% block extra_head %}
+  <script src="{% static 'core/js/form.js' %}"></script>
+{% endblock extra_head %}
 
 {% block main_content %}
   <main class="h-screen flex flex-col justify-center px-8 bg-gray-200">
@@ -33,10 +38,7 @@
           {% include 'components/input.html'  with id='username' name='username' label='User ID / Username' placeholder='Enter your user ID' required=True error=form.username.errors.0 %}
           {% include 'components/input.html'  with id='password' name='password' label='Password' type='password' placeholder='Enter your password' required=True error=form.password.errors.0 %}
 
-          <button type="submit"
-              class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-950 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition duration-150 cursor-pointer">
-            Sign In
-          </button>
+          {% include "components/button.html" with text='Sign In' type='submit' class="py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-950 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition duration-150" %}
         </form>
       </div>
     </div>
