@@ -1,6 +1,7 @@
 {% comment %} Component for reusable button with different state and styling {% endcomment %}
 <button
   type={{ type|default:'button' }}
+  id={{ id|default:'button' }}
   class="rounded-sm p-2 w-full flex items-center gap-2 justify-center cursor-pointer {{ class }}"
 >
   <svg id="btn-spinner" class="hidden animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
