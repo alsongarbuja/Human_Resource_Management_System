@@ -1,3 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def clockInOut(request):
+
+  return render(request, "punch/clock-in-out.html")
