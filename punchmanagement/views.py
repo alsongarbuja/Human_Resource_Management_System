@@ -5,6 +5,6 @@ from .utils import get_employee_clock_status_context
 
 # @permission_required("")
 def clockInOut(request):
-  context = get_employee_clock_status_context(request.user)
+  context = get_employee_clock_status_context(request.user, request.active_unit)
 
   return render(request, "punch/clock-in-out.html", context)

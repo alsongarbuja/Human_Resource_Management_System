@@ -62,6 +62,7 @@ MIDDLEWARE = [
   'django.contrib.auth.middleware.LoginRequiredMiddleware',
 
   # Custom built Middlewares
+  'core.middleware.ActiveUnitMiddleware',
 ]
 
 ROOT_URLCONF = 'Human_Resource_Management_System.urls'
@@ -126,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = '/app/dashboard'
+LOGIN_REDIRECT_URL = '/app/units'
 LOGOUT_REDIRECT_URL = 'login'
 
 # Session handling

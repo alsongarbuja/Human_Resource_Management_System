@@ -1,12 +1,35 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
+from employeemanagement.models import EmployeeProfile, JobProfile
 from punchmanagement.utils import get_employee_clock_status_context
 
 def login(request):
   return render(request, "auth/login.html")
 
+def select_unit(request):
+  employee_profile = EmployeeProfile.objects.get(user=request.user)
+  job_profile = JobProfile.objects.filter(employee=employee_profile)
+
+  if len(list(job_profile)) <= 1:
+    request.session['active_unit_id'] = int(job_profile[0].unit.id)
+    return redirect("core:dashboard")
+
+  context = {
+    'units': list(job_profile)
+  }
+
+  return render(request, "app/unit-selection.html", context)
+
+@login_required
+def set_active_unit(request):
+  if request.method == "POST":
+    selected_unit_id = request.POST.get("selected_unit_id")
+    request.session['active_unit_id'] = int(selected_unit_id)
+    return redirect("core:dashboard")
+
 def dashboard(request):
-  clock_status_context = get_employee_clock_status_context(request.user)
+  clock_status_context = get_employee_clock_status_context(request.user, request.active_unit)
 
   dummy_timeoff_requests = [
     {

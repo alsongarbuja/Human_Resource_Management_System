@@ -22,7 +22,7 @@ def clock_in_employee(request, data: ClockOutFormSchema = Form(...)):
     redirect_url = data.redirect_url
 
     employee_profile = get_object_or_404(EmployeeProfile, user=request.user)
-    job_profile = get_object_or_404(JobProfile, employee=employee_profile)
+    job_profile = get_object_or_404(JobProfile, employee=employee_profile, unit=request.active_unit)
 
     already_clocked_in = PunchEntry.objects.filter(
       employee=employee_profile,
@@ -62,7 +62,7 @@ def clock_out_employee(request, data: ClockOutFormSchema = Form(...)):
   redirect_url = data.redirect_url
 
   employee = get_object_or_404(EmployeeProfile, user=request.user)
-  jobProfile = get_object_or_404(JobProfile, employee=employee)
+  jobProfile = get_object_or_404(JobProfile, employee=employee, unit=request.active_unit)
 
   active_punch = PunchEntry.objects.filter(
     employee=employee,
