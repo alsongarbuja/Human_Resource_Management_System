@@ -11,12 +11,18 @@ def select_unit(request):
   employee_profile = EmployeeProfile.objects.get(user=request.user)
   job_profile = JobProfile.objects.filter(employee=employee_profile)
 
-  if len(list(job_profile)) <= 1:
+  jp = list(job_profile)
+
+  if len(jp) <= 1:
+    request.session['active_unit_id'] = int(job_profile[0].unit.id)
+    return redirect("core:dashboard")
+
+  if all(p.role.name == 'Manager' for p in jp) and len({p.unit.department_id for p in jp}) == 1:
     request.session['active_unit_id'] = int(job_profile[0].unit.id)
     return redirect("core:dashboard")
 
   context = {
-    'units': list(job_profile)
+    'units': jp
   }
 
   return render(request, "app/unit-selection.html", context)
