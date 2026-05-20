@@ -26,6 +26,9 @@
     {% if user_is_clocked_in %}
       <form method="POST" action="/api/v1/punch/clock-out">
         {% csrf_token %}
+        <input type="hidden"
+               name="redirect_url"
+               value="{{ request.resolver_match.view_name }}" />
         <button type="submit"
                 class="w-full bg-black text-white hover:bg-neutral-900 py-2.5 px-4 text-sm font-medium rounded-md transition-colors duration-150">
           Clock Out
@@ -34,6 +37,9 @@
     {% else %}
       <form method="POST" action="/api/v1/punch/clock-in">
         {% csrf_token %}
+        <input type="hidden"
+               name="redirect_url"
+               value="{{ request.resolver_match.view_name }}" />
         <button type="submit"
                 class="w-full bg-white text-black border border-neutral-900 hover:bg-neutral-50 py-2.5 px-4 text-sm font-medium rounded-md transition-colors duration-150">
           Clock In
