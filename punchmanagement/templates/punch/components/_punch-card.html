@@ -4,7 +4,6 @@
       <span class="text-xs font-semibold uppercase tracking-wider">Shift Status</span>
       <i class="fa-solid fa-clock-rotate-left text-sm"></i>
     </div>
-
     {% if user_is_clocked_in %}
       <div class="space-y-1">
         <div class="flex items-center gap-2">
@@ -23,19 +22,23 @@
       </div>
     {% endif %}
   </div>
-
   <div class="mt-8">
-    <form method="POST">
-      {% csrf_token %}
-      {% if user_is_clocked_in %}
-        <button type="submit" class="w-full bg-black text-white hover:bg-neutral-900 py-2.5 px-4 text-sm font-medium rounded-md transition-colors duration-150">
+    {% if user_is_clocked_in %}
+      <form method="POST" action="/api/v1/punch/clock-out">
+        {% csrf_token %}
+        <button type="submit"
+                class="w-full bg-black text-white hover:bg-neutral-900 py-2.5 px-4 text-sm font-medium rounded-md transition-colors duration-150">
           Clock Out
         </button>
-      {% else %}
-        <button type="submit" class="w-full bg-white text-black border border-neutral-900 hover:bg-neutral-50 py-2.5 px-4 text-sm font-medium rounded-md transition-colors duration-150">
+      </form>
+    {% else %}
+      <form method="POST" action="/api/v1/punch/clock-in">
+        {% csrf_token %}
+        <button type="submit"
+                class="w-full bg-white text-black border border-neutral-900 hover:bg-neutral-50 py-2.5 px-4 text-sm font-medium rounded-md transition-colors duration-150">
           Clock In
         </button>
-      {% endif %}
-    </form>
+      </form>
+    {% endif %}
   </div>
 </div>

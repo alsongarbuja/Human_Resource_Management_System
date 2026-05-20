@@ -1,5 +1,6 @@
 from ninja import NinjaAPI
 from employeemanagement.api import router as employees_router
+from punchmanagement.api import router as punch_router
 
 api = NinjaAPI(
   title="HRMS API",
@@ -8,3 +9,4 @@ api = NinjaAPI(
 )
 
 api.add_router("/employees/", employees_router)
+api.add_router("/punch/", punch_router)
