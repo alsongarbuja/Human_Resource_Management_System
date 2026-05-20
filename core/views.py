@@ -1,9 +1,13 @@
 from django.shortcuts import render
 
+from punchmanagement.utils import get_employee_clock_status_context
+
 def login(request):
   return render(request, "auth/login.html")
 
 def dashboard(request):
+  clock_status_context = get_employee_clock_status_context(request.user)
+
   dummy_timeoff_requests = [
     {
       'type': 'Vacation Leave',
@@ -29,10 +33,6 @@ def dashboard(request):
   ]
 
   context = {
-    'user_is_clocked_in': True,  # Flip to False to test clocked-out UI
-    'clock_in_time': '08:45 AM',
-    'pay_period_start': 'May 10, 2026',
-    'pay_period_end': 'May 23, 2026',
     'total_hours_worked': '74.2',
     'regular_hours': '70.0',
     'ot_hours': '4.2',
@@ -40,5 +40,7 @@ def dashboard(request):
     # Pass the dummy array to the template
     'timeoff_requests': dummy_timeoff_requests,
   }
+
+  context.update(clock_status_context)
 
   return render(request, "app/dashboard.html", context)
