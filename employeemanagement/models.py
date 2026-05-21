@@ -4,14 +4,14 @@ from datetime import date
 from core.models import BaseModel
 from organizationmanagement.models import Unit
 
-#
 # * Role Model
 class Role(BaseModel):
   """
     This contains the detail about the role in the system
 
     Fields:
-      = name: char (name of the role)
+      - name: char (name of the role)
+      - description?: Text (optional description field)
   """
   name = models.CharField(max_length=50, unique=True)
   description = models.TextField(blank=True)
@@ -24,7 +24,6 @@ class Role(BaseModel):
     verbose_name = "Role"
     verbose_name_plural = "Roles"
 
-#
 # * Empoyee Type Model
 class EmployeeType(BaseModel):
   """
@@ -45,7 +44,6 @@ class EmployeeType(BaseModel):
     verbose_name = "Employee Type"
     verbose_name_plural = "Employee Types"
 
-#
 # * Pay Frequency
 class PayFrequency(BaseModel):
   """
@@ -66,7 +64,6 @@ class PayFrequency(BaseModel):
     verbose_name = "Pay Frequency"
     verbose_name_plural = "Pay Frequency"
 
-#
 # * Employee Profile Model
 class EmployeeProfile(BaseModel):
   """
@@ -91,7 +88,6 @@ class EmployeeProfile(BaseModel):
     verbose_name = "Employee Profile"
     verbose_name_plural = "Employee Profiles"
 
-#
 # * Job Profile Model
 class JobProfile(BaseModel):
   """
