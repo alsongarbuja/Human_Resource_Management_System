@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 
 from employeemanagement.models import EmployeeProfile, JobProfile
 from punchmanagement.utils import get_employee_clock_status_context
+from leavemanagement.utils import get_employee_time_off_requests_context
 
 def login(request):
   """
@@ -53,37 +54,14 @@ def dashboard(request):
   """
   clock_status_context = get_employee_clock_status_context(request.user, request.active_unit)
 
-  dummy_timeoff_requests = [
-    {
-      'type': 'Vacation Leave',
-      'start_date': 'June 12, 2026',
-      'end_date': 'June 15, 2026',
-      'days': '4 Days',
-      'status': 'Approved'
-    },
-    {
-      'type': 'Medical / Sick Leave',
-      'start_date': 'July 02, 2026',
-      'end_date': 'July 03, 2026',
-      'days': '1 Day',
-      'status': 'Pending'
-    },
-    {
-      'type': 'Personal Leave',
-      'start_date': 'Aug 18, 2026',
-      'end_date': 'Aug 18, 2026',
-      'days': '0.5 Days',
-      'status': 'Approved'
-    }
-  ]
+  timeoff_requests = get_employee_time_off_requests_context(request.user, request.active_unit)
 
   context = {
     'total_hours_worked': '74.2',
     'regular_hours': '70.0',
     'ot_hours': '4.2',
 
-    # Pass the dummy array to the template
-    'timeoff_requests': dummy_timeoff_requests,
+    'timeoff_requests': timeoff_requests,
   }
 
   context.update(clock_status_context)

@@ -1,7 +1,7 @@
 from django.db import models
 
 from core.models import BaseModel
-from employeemanagement.models import EmployeeProfile, JobProfile
+from employeemanagement.models import JobProfile
 
 class PayCode(BaseModel):
   """
@@ -45,7 +45,7 @@ class TimeoffRequest(BaseModel):
     'Approved': 'Approved',
     'Rejected': 'Rejected',
   })
-  employee = models.ForeignKey(EmployeeProfile, on_delete=models.PROTECT)
+  employee = models.ForeignKey(JobProfile, on_delete=models.PROTECT)
   # TODO: Add attachments
 
   def __str__(self):
