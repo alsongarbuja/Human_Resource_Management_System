@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404
+
 from employeemanagement.models import EmployeeProfile, JobProfile
 from leavemanagement.models import TimeoffRequest
 
@@ -10,19 +12,19 @@ def get_employee_time_off_requests_context(user, active_unit_id):
     return {}
 
   try:
-    employee_profile = EmployeeProfile.objects.get(user=user)
-    job_profile = JobProfile.objects.get(employee=employee_profile, unit=active_unit_id)
+    employee_profile = get_object_or_404(EmployeeProfile, user=user)
+    job_profile = get_object_or_404(JobProfile, employee=employee_profile, unit=active_unit_id)
   except (EmployeeProfile.DoesNotExist, JobProfile.DoesNotExist):
     return {
       'timeoff_requests': [],
     }
 
   timeoff_requests = TimeoffRequest.objects.filter(
-    employee=job_profile,
-  ).order_by('-start-date')
+    employee=job_profile.id,
+  ).order_by('-start_date')
 
   context = {
-    'timeoff_requests': list(timeoff_requests),
+    'timeoff_requests': timeoff_requests,
   }
 
   return context

@@ -40,6 +40,7 @@ urlpatterns = [
 
   path('app/', include("core.url", namespace="core")),
   path('punch/', include("punchmanagement.url", namespace="punch")),
+  path('leave/', include("leavemanagement.url", namespace="leave")),
   # path('auth/', include("employeemanagement.url", namespace="employee_management")),
 
   path("api/v1/", api.urls),

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.contrib.auth.decorators import login_required
 
 from employeemanagement.models import EmployeeProfile, JobProfile
@@ -18,8 +18,8 @@ def select_unit(request):
     Also sends the list of units current employee is assigned if multiple present
     else redirects to dashboard page if only one unit or manager in all unit
   """
-  employee_profile = EmployeeProfile.objects.get(user=request.user)
-  job_profile = JobProfile.objects.filter(employee=employee_profile)
+  employee_profile = get_object_or_404(EmployeeProfile, user=request.user)
+  job_profile = get_list_or_404(JobProfile, employee=employee_profile)
 
   jp = list(job_profile)
 
@@ -60,10 +60,9 @@ def dashboard(request):
     'total_hours_worked': '74.2',
     'regular_hours': '70.0',
     'ot_hours': '4.2',
-
-    'timeoff_requests': timeoff_requests,
   }
 
   context.update(clock_status_context)
+  context.update(timeoff_requests)
 
   return render(request, "app/dashboard.html", context)

@@ -16,7 +16,9 @@
         <span class="px-3 text-xxs font-semibold uppercase tracking-wider text-neutral-500 block mb-2">Time Track</span>
         <ul class="space-y-1">
           <li>{% include "app/components/_side-nav.html" with to="punch:clockInOut" text="Clock in / Out" icon="i" %}</li>
-          <li>{% include "app/components/_side-nav.html" with to="core:dashboard" text="Time off Requests" icon="i" %}</li>
+          <li>
+            {% include "app/components/_side-nav.html" with to="leave:timeoffRequests" text="Time off Requests" icon="i" %}
+          </li>
         </ul>
       </div>
       {% if user.role == "Manager" %}

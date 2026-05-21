@@ -5,13 +5,13 @@
       <p class="text-xs text-neutral-500 mt-0.5">Track your leaves, vacation days, and medical submissions.</p>
     </div>
     <div>
-      <a href="#" class="inline-flex items-center justify-center bg-black text-white px-4 py-2 text-sm font-medium rounded-md hover:bg-neutral-900 transition-colors duration-150 gap-2">
+      <a href="#"
+         class="inline-flex items-center justify-center bg-black text-white px-4 py-2 text-sm font-medium rounded-md hover:bg-neutral-900 transition-colors duration-150 gap-2">
         <i class="fa-solid fa-plus text-xs"></i>
         <span>Request Time Off</span>
       </a>
     </div>
   </div>
-
   <!-- Clean Responsive Table Container -->
   <div class="overflow-x-auto">
     <table class="w-full text-left border-collapse text-sm">
@@ -25,11 +25,11 @@
       </thead>
       <tbody class="divide-y divide-neutral-100 text-neutral-700">
         {% for request in timeoff_requests %}
-          <!-- Row Entry Example -->
+          {{ request }}
           <tr class="hover:bg-neutral-50/50 transition-colors duration-150">
-            <td class="py-4 px-6 font-medium text-neutral-900">
+            {% comment %} <td class="py-4 px-6 font-medium text-neutral-900">
               {{ request.pay_code|default:"Vacation / Paid Time Off" }}
-            </td>
+            </td> {% endcomment %}
             {% comment %} <td class="py-4 px-6 text-neutral-500">
               {{ request.start_date|default:"June 12, 2026" }} – {{ request.end_date|default:"June 15, 2026" }}
             </td> {% endcomment %}
@@ -38,19 +38,17 @@
             </td> {% endcomment %}
             <td class="py-4 px-6">
               <!-- Black tag for approved, neutral gray for pending/review -->
-              {% if request.status == 'Approved' or not request.status %}
+              {% comment %} {% if request.status == 'Approved' or not request.status %}
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-black text-white">Approved</span>
               {% else %}
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-neutral-100 text-neutral-800">Pending</span>
-              {% endif %}
+              {% endif %} {% endcomment %}
             </td>
           </tr>
         {% empty %}
           <!-- Fallback message if context list is completely empty -->
           <tr>
-            <td colspan="4" class="py-8 text-center text-sm text-neutral-400">
-              No recent time off records found.
-            </td>
+            <td colspan="4" class="py-8 text-center text-sm text-neutral-400">No recent time off records found.</td>
           </tr>
         {% endfor %}
       </tbody>
