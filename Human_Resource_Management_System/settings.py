@@ -31,39 +31,55 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+  # In-Built Apps
+  'django.contrib.admin',
+  'django.contrib.auth',
+  'django.contrib.contenttypes',
+  'django.contrib.sessions',
+  'django.contrib.messages',
+  'django.contrib.staticfiles',
+
+  # Installed Apps
+  # 'ninja',
+
+  # Created Apps
+  'core',
+  'organizationmanagement',
+  'employeemanagement',
+  'punchmanagement',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+  # In-Built Middlewares
+  'django.middleware.security.SecurityMiddleware',
+  'django.contrib.sessions.middleware.SessionMiddleware',
+  'django.middleware.common.CommonMiddleware',
+  'django.middleware.csrf.CsrfViewMiddleware',
+  'django.contrib.auth.middleware.AuthenticationMiddleware',
+  'django.contrib.messages.middleware.MessageMiddleware',
+  'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+  'django.contrib.auth.middleware.LoginRequiredMiddleware',
+
+  # Custom built Middlewares
+  'core.middleware.ActiveUnitMiddleware',
 ]
 
 ROOT_URLCONF = 'Human_Resource_Management_System.urls'
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
+  {
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [BASE_DIR / "templates"],
+    'APP_DIRS': True,
+    'OPTIONS': {
+      'context_processors': [
+        'django.template.context_processors.request',
+        'django.contrib.auth.context_processors.auth',
+        'django.contrib.messages.context_processors.messages',
+      ],
     },
+  },
 ]
 
 WSGI_APPLICATION = 'Human_Resource_Management_System.wsgi.application'
@@ -77,18 +93,31 @@ DATABASES = {
   #   'ENGINE': 'django.db.backends.sqlite3',
   #   'NAME': BASE_DIR / 'db.sqlite3',
   # },
-  "default": {
-    "ENGINE": "django.db.backends.mysql",
-    "NAME": "hrms_db",
-    "USER": "root",
-    "PASSWORD": "asdfAsdf#90",
-    "HOST": "localhost",
-    "PORT": "3306",
-    "OPTIONS": {
-      "charset": "utf8mb4",
-      "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
-    },
-  }
+  # 'default': {
+  #   'ENGINE': 'django.db.backends.mysql',
+  #   'NAME': 'hrms_db',
+  #   'USER': 'root',
+  #   'PASSWORD': 'asdfAsdf#90',
+  #   'HOST': 'localhost',
+  #   'PORT': '3306',
+  #   'OPTIONS': {
+  #     'charset': 'utf8mb4',
+  #     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+  #   },
+  # },
+
+  'default': {
+    'ENGINE': 'mssql',
+    'NAME': 'hrms',
+    'USER': '',
+    'PASSWORD': '',
+    'HOST': 'localhost',
+    'PORT': '',
+    'OPTIONS': {
+      'driver': 'ODBC Driver 17 for SQL Server',
+      'long_data_type_column': True,
+    }
+  },
 }
 
 
@@ -96,20 +125,28 @@ DATABASES = {
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+  {
+    'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+  },
+  {
+    'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+  },
+  {
+    'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+  },
+  {
+    'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+  },
 ]
 
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = '/app/units'
+LOGOUT_REDIRECT_URL = 'login'
+
+# Session handling
+SESSION_COOKIE_AGE = 1800
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/

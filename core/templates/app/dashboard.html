@@ -1,0 +1,75 @@
+{% extends "admin-base.html" %}
+
+{% block title %}Time Clock Management | Dashboard{% endblock title %}
+
+{% block content %}
+  <div class="border-b border-neutral-200 pb-5">
+    <h1 class="text-2xl font-bold tracking-tight text-neutral-900">Dashboard</h1>
+    <p class="text-sm text-neutral-500 mt-1">Manage your shifts, view pay periods, and request time off.</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {% include "punch/components/_punch-card.html" %}
+    {% include "punch/components/_punch-summary-card.html" %}
+  </div>
+
+  <div class="bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden">
+    <div class="p-6 border-b border-neutral-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h2 class="text-md font-semibold text-neutral-900">Recent Time Off Requests</h2>
+        <p class="text-xs text-neutral-500 mt-0.5">Track your leaves, vacation days, and medical submissions.</p>
+      </div>
+      <div>
+        <a href="#" class="inline-flex items-center justify-center bg-black text-white px-4 py-2 text-sm font-medium rounded-md hover:bg-neutral-900 transition-colors duration-150 gap-2">
+          <i class="fa-solid fa-plus text-xs"></i>
+          <span>Request Time Off</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Clean Responsive Table Container -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse text-sm">
+        <thead>
+          <tr class="bg-neutral-50 border-b border-neutral-200 text-neutral-500 text-xs font-semibold uppercase tracking-wider">
+            <th class="py-3 px-6">Leave Type</th>
+            <th class="py-3 px-6">Dates</th>
+            <th class="py-3 px-6">Total Days</th>
+            <th class="py-3 px-6">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-neutral-100 text-neutral-700">
+          {% for request in timeoff_requests %}
+            <!-- Row Entry Example -->
+            <tr class="hover:bg-neutral-50/50 transition-colors duration-150">
+              <td class="py-4 px-6 font-medium text-neutral-900">
+                {{ request.type|default:"Vacation / Paid Time Off" }}
+              </td>
+              <td class="py-4 px-6 text-neutral-500">
+                {{ request.start_date|default:"June 12, 2026" }} – {{ request.end_date|default:"June 15, 2026" }}
+              </td>
+              <td class="py-4 px-6 text-neutral-600">
+                {{ request.days|default:"4 Days" }}
+              </td>
+              <td class="py-4 px-6">
+                <!-- Black tag for approved, neutral gray for pending/review -->
+                {% if request.status == 'Approved' or not request.status %}
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-black text-white">Approved</span>
+                {% else %}
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-neutral-100 text-neutral-800">Pending</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <!-- Fallback message if context list is completely empty -->
+            <tr>
+              <td colspan="4" class="py-8 text-center text-sm text-neutral-400">
+                No recent time off records found.
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

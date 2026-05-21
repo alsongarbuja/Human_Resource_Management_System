@@ -1,0 +1,27 @@
+{% extends "admin-base.html" %}
+{% block title %}
+  Time Clock Management | Clock In/Out
+{% endblock title %}
+{% block content %}
+  {% if messages %}
+    <ul class="messages" style="list-style: none; padding: 0;">
+      {% for message in messages %}
+        <li style="padding: 10px;
+                   margin-bottom: 10px;
+                   border-radius: 4px;
+                   color: white;
+                   background-color: {% if message.tags == 'error' %}#f44336{% else %}#4caf50{% endif %}">
+          {{ message }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <div class="border-b border-neutral-200 pb-5">
+    <h1 class="text-2xl font-bold tracking-tight text-neutral-900">Clock In / Out</h1>
+    <p class="text-sm text-neutral-500 mt-1">Have a great day at work.</p>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {% include "punch/components/_punch-card.html" %}
+    {% include "punch/components/_punch-summary-card.html" %}
+  </div>
+{% endblock content %}

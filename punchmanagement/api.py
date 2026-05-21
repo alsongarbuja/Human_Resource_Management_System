@@ -1,0 +1,85 @@
+from django.utils import timezone
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect
+from ninja import Router, Schema, Form
+from ninja.errors import HttpError
+
+from employeemanagement.models import EmployeeProfile, JobProfile
+from punchmanagement.models import PunchEntry, PayPeriod
+
+router = Router()
+
+class ClockOutFormSchema(Schema):
+  # TODO: think about shift note too
+  shift_notes: str = None
+  redirect_url: str = "punch:clockInOut"
+
+@router.post("/clock-in")
+def clock_in_employee(request, data: ClockOutFormSchema = Form(...)):
+    """
+    Clocks in the authenticated employee if they don't have an active shift.
+    """
+    redirect_url = data.redirect_url
+
+    employee_profile = get_object_or_404(EmployeeProfile, user=request.user)
+    job_profile = get_object_or_404(JobProfile, employee=employee_profile, unit=request.active_unit)
+
+    already_clocked_in = PunchEntry.objects.filter(
+      employee=employee_profile,
+      job_profile=job_profile,
+      clock_out__isnull=True
+    ).exists()
+
+    if already_clocked_in:
+      raise HttpError(400, "You are already clocked in.")
+
+    today = timezone.now().date()
+    current_pay_period = PayPeriod.objects.filter(
+      start_date__lte=today,
+      end_date__gte=today
+    ).first()
+
+    if not current_pay_period:
+      raise HttpError(400, "Cannot clock in: No active pay period found for today's date.")
+
+    punch = PunchEntry.objects.create(
+      employee=employee_profile,
+      job_profile=job_profile,
+      pay_period=current_pay_period,
+      # TODO: fix this timezone
+      clock_in=timezone.now()
+    )
+
+    messages.success(request, f"Successfully clocked in at {punch.clock_in.strftime('%H:%M')}.")
+    return redirect(redirect_url)
+
+@router.post("/clock-out")
+def clock_out_employee(request, data: ClockOutFormSchema = Form(...)):
+  """
+    Clocks out the employee of their currently clocked in status
+  """
+
+  redirect_url = data.redirect_url
+
+  employee = get_object_or_404(EmployeeProfile, user=request.user)
+  jobProfile = get_object_or_404(JobProfile, employee=employee, unit=request.active_unit)
+
+  active_punch = PunchEntry.objects.filter(
+    employee=employee,
+    job_profile=jobProfile,
+    clock_out__isnull=True
+  ).order_by('-clock_in').first()
+
+  if not active_punch:
+    messages.error(request, "You have no active clock in right now")
+    return redirect(redirect_url)
+
+  active_punch.clock_out = timezone.now()
+  active_punch.save()
+
+  messages.success(
+    request,
+    f"Successfully clocked out at {active_punch.clock_out.strftime('%H:%M')}"
+  )
+
+  return redirect(redirect_url)

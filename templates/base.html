@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+      {% block title %}
+        UPortal
+      {% endblock title %}
+    </title>
+    {% block meta %}
+      <meta name="description" content="Default description for the site.">
+    {% endblock meta %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap"
+          rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Karla', sans-serif;
+        font-optical-sizing: auto;
+        font-weight: <weight>;
+        font-style: normal;
+      }
+    </style>
+    {% block extra_head %}
+    {% endblock extra_head %}
+  </head>
+  <body>
+    {% block main_content %}
+    {% endblock main_content %}
+    {% comment %} <div id="inactivity-modal" class="hidden fixed top-0 left-0 w-full h-full bg-black/60 zIndex-9999 justify-center align-center">
+      <div class="bg-white p-6 rounded-md align-center w-[400px] mx-auto shadow-md fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
+        <h2 class="mt-0 text-[#d32f2f]">Inactivity Warning</h2>
+        <p>You have been idle for a while. For security, you will be logged out automatically in:</p>
+        <p class="text-sm font-bold text-[#333]" id="countdown-timer">03:00</p>
+        <div class="mt-[20px]">
+
+          {% include "components/button.html" with text="Stay Logged In" id="stay-logged-in-btn" class="bg-[#007bff] text-white" %}
+        </div>
+      </div>
+    </div> {% endcomment %}
+    {% comment %} <script>
+      const IDLE_TIMEOUT = 1 * 60 * 1000;
+      const WARNING_TIMEOUT = 1 * 60 * 1000;
+      const LOGOUT_URL = "/auth/logout/";
+
+      let idleTimer;
+      let warningTimer;
+      let countdownInterval;
+      let timeLeft = WARNING_TIMEOUT / 1000;
+
+      const modal = document.getElementById('inactivity-modal');
+      const timerDisplay = document.getElementById('countdown-timer');
+      const stayLoggedInBtn = document.getElementById('stay-logged-in-btn');
+
+      function fallbackToTimer() {
+        resetTimers();
+
+        const activityEvents = ['mousemove', 'mousedown', 'keypress', 'scroll', 'touchstart'];
+        activityEvents.forEach(event => {
+          window.addEventListener(event, resetTimers);
+        });
+      }
+
+      function resetTimers() {
+        modal.classList.add('hidden');
+        clearTimeout(idleTimer);
+        clearTimeout(warningTimer);
+        clearInterval(countdownInterval);
+
+        timeLeft = WARNING_TIMEOUT / 1000;
+
+        idleTimer = setTimeout(showWarningModal, IDLE_TIMEOUT);
+      }
+
+      function showWarningModal() {
+        const activityEvents = ['mousemove', 'mousedown', 'keypress', 'scroll', 'touchstart'];
+        activityEvents.forEach(event => {
+          window.removeEventListener(event, resetTimers);
+        });
+
+        modal.classList.remove('hidden');
+
+        updateCountdownDisplay();
+        countdownInterval = setInterval(() => {
+          timeLeft--;
+          updateCountdownDisplay();
+
+          if (timeLeft <= 0) {
+            triggerLogout();
+          }
+        }, 1000);
+      }
+
+      function updateCountdownDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerDisplay.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }
+
+      function triggerLogout() {
+        window.location.href = LOGOUT_URL;
+      }
+
+      stayLoggedInBtn.addEventListener('click', () => {
+        fetch('/')
+          .then(() => {
+            fallbackToTimer();
+          })
+          .catch(() => {
+            fallbackToTimer();
+          });
+      });
+
+      window.onload = fallbackToTimer;
+    </script> {% endcomment %}
+  </body>
+</html>

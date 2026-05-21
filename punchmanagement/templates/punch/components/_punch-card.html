@@ -1,0 +1,50 @@
+<div class="bg-white border border-neutral-200 rounded-xl p-6 flex flex-col justify-between shadow-sm">
+  <div>
+    <div class="flex items-center justify-between text-neutral-400 mb-4">
+      <span class="text-xs font-semibold uppercase tracking-wider">Shift Status ({{ unit }})</span>
+      <i class="fa-solid fa-clock-rotate-left text-sm"></i>
+    </div>
+    {% if user_is_clocked_in %}
+      <div class="space-y-1">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-black animate-pulse"></span>
+          <span class="text-xl font-bold text-neutral-900">Clocked In</span>
+        </div>
+        <p class="text-xs text-neutral-500">Shift started today at {{ clock_in_time|default:"07:30 AM" }}</p>
+      </div>
+    {% else %}
+      <div class="space-y-1">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-neutral-300"></span>
+          <span class="text-xl font-bold text-neutral-400">Clocked Out</span>
+        </div>
+        <p class="text-xs text-neutral-500">You are currently off the clock.</p>
+      </div>
+    {% endif %}
+  </div>
+  <div class="mt-8">
+    {% if user_is_clocked_in %}
+      <form method="POST" action="/api/v1/punch/clock-out">
+        {% csrf_token %}
+        <input type="hidden"
+               name="redirect_url"
+               value="{{ request.resolver_match.view_name }}" />
+        <button type="submit"
+                class="w-full bg-black text-white hover:bg-neutral-900 py-2.5 px-4 text-sm font-medium rounded-md transition-colors duration-150">
+          Clock Out
+        </button>
+      </form>
+    {% else %}
+      <form method="POST" action="/api/v1/punch/clock-in">
+        {% csrf_token %}
+        <input type="hidden"
+               name="redirect_url"
+               value="{{ request.resolver_match.view_name }}" />
+        <button type="submit"
+                class="w-full bg-white text-black border border-neutral-900 hover:bg-neutral-50 py-2.5 px-4 text-sm font-medium rounded-md transition-colors duration-150">
+          Clock In
+        </button>
+      </form>
+    {% endif %}
+  </div>
+</div>

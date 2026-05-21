@@ -1,3 +1,22 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Department, Unit, Kiosk
+
+@admin.register(Department)
+class DepartmentAdmin(admin.ModelAdmin):
+  list_display=("name",)
+  search_fields=("name",)
+  order=("name",)
+
+@admin.register(Unit)
+class UnitAdmin(admin.ModelAdmin):
+  list_display=("name", "department",)
+  search_fields=("name",)
+  order=("name", "department",)
+  list_filter=("department",)
+
+@admin.register(Kiosk)
+class KoiskAdmin(admin.ModelAdmin):
+  list_display=("name", "department",)
+  search_fields=("name",)
+  list_filter=("department",)
