@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Department, Unit
+from .models import Department, Unit, Kiosk
 
 @admin.register(Department)
 class DepartmentAdmin(admin.ModelAdmin):
@@ -13,4 +13,10 @@ class UnitAdmin(admin.ModelAdmin):
   list_display=("name", "department",)
   search_fields=("name",)
   order=("name", "department",)
+  list_filter=("department",)
+
+@admin.register(Kiosk)
+class KoiskAdmin(admin.ModelAdmin):
+  list_display=("name", "department",)
+  search_fields=("name",)
   list_filter=("department",)

@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>
-      {% block title %}UPortal{% endblock title %}
+      {% block title %}
+        UPortal
+      {% endblock title %}
     </title>
-
     {% block meta %}
       <meta name="description" content="Default description for the site.">
     {% endblock meta %}
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap"
+          rel="stylesheet">
     <style>
       body {
         font-family: 'Karla', sans-serif;
@@ -25,14 +24,14 @@
         font-style: normal;
       }
     </style>
-
-    {% block extra_head %}{% endblock extra_head %}
+    {% block extra_head %}
+    {% endblock extra_head %}
   </head>
   <body>
-    {% block main_content %}{% endblock main_content %}
-
+    {% block main_content %}
+    {% endblock main_content %}
     {% comment %} <div id="inactivity-modal" class="hidden fixed top-0 left-0 w-full h-full bg-black/60 zIndex-9999 justify-center align-center">
-      <div class="bg-white p-6 rounded-md align-center w-[400px] mx-auto shadow-md fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2" >
+      <div class="bg-white p-6 rounded-md align-center w-[400px] mx-auto shadow-md fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
         <h2 class="mt-0 text-[#d32f2f]">Inactivity Warning</h2>
         <p>You have been idle for a while. For security, you will be logged out automatically in:</p>
         <p class="text-sm font-bold text-[#333]" id="countdown-timer">03:00</p>
@@ -42,7 +41,6 @@
         </div>
       </div>
     </div> {% endcomment %}
-
     {% comment %} <script>
       const IDLE_TIMEOUT = 1 * 60 * 1000;
       const WARNING_TIMEOUT = 1 * 60 * 1000;

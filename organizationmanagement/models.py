@@ -47,3 +47,28 @@ class Unit(BaseModel):
     db_table = "unit"
     verbose_name = "Unit"
     verbose_name_plural = "Units"
+
+class Kiosk(BaseModel):
+  """
+    This model contains details about the kiosk/devices linked to the department
+
+    Fields:
+      - department: FK (connection to department model)
+      - name: Char (a unique name for the device)
+      - description: TextField (a description of the kiosk)
+      - allowedIP: Ip Address (a allowed ip address from which the kiosk can send request)
+  """
+  department = models.ForeignKey(
+    Department, on_delete=models.PROTECT,
+  )
+  name = models.CharField(max_length=50, unique=True)
+  description = models.TextField(blank=True)
+  allowedIP = models.GenericIPAddressField(unique=True)
+
+  def __str__(self):
+    return self.name
+
+  class Meta(BaseModel.Meta):
+    db_table = "kiosk"
+    verbose_name = "Kiosk Device"
+    verbose_name_plural = "Kiosk Devices"
