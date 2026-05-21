@@ -21,6 +21,7 @@ django==6.0.5
     # via
     #   -r requirements.in
     #   django-ninja
+    #   mssql-django
 django-ninja==1.6.2
     # via -r requirements.in
 djlint==1.36.4
@@ -35,6 +36,8 @@ jsbeautifier==1.15.4
     #   djlint
 json5==0.14.0
     # via djlint
+mssql-django==1.7.1
+    # via -r requirements.in
 mysqlclient==2.2.8
     # via -r requirements.in
 pathspec==1.1.1
@@ -43,6 +46,12 @@ pydantic==2.13.4
     # via django-ninja
 pydantic-core==2.46.4
     # via pydantic
+pyodbc==5.3.0
+    # via mssql-django
+pytz==2026.2
+    # via
+    #   -r requirements.in
+    #   mssql-django
 pyyaml==6.0.3
     # via djlint
 regex==2026.5.9

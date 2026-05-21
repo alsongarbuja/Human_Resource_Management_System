@@ -2,3 +2,5 @@ django
 mysqlclient
 djLint
 django-ninja
+mssql-django
+pytz
