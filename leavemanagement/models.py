@@ -12,6 +12,7 @@ class PayCode(BaseModel):
       - description?: Text (description of the pay code)
   """
   name = models.CharField(max_length=10, unique=True)
+  max_credit = models.FloatField()
   description = models.TextField(blank=True)
 
   def __str__(self):
@@ -33,8 +34,10 @@ class TimeoffRequest(BaseModel):
       - end_date: DateTime (End date of the leave request)
       - status: Char (Status of the time off request)
       - employee: FK (Employee who is requesting the leave)
+      - reason?: Text (Any reason)
   """
   leave_type = models.ForeignKey(PayCode, on_delete=models.CASCADE)
+  reason = models.TextField(blank=True)
   start_date = models.DateTimeField()
   end_date = models.DateTimeField()
   stauts = models.TextField(choices={
@@ -43,6 +46,7 @@ class TimeoffRequest(BaseModel):
     'Rejected': 'Rejected',
   })
   employee = models.ForeignKey(EmployeeProfile, on_delete=models.PROTECT)
+  # TODO: Add attachments
 
   def __str__(self):
     return f"Time of request by {self.employee.user.username}"

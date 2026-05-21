@@ -4,7 +4,7 @@ from .models import PayCode, TimeoffRequest, LeaveBalance
 
 @admin.register(PayCode)
 class PayCodeAdmin(admin.ModelAdmin):
-  list_display=("name", "description",)
+  list_display=("name", "max_credit", "description",)
   search_fields=("name", "description")
 
 @admin.register(TimeoffRequest)
