@@ -5,8 +5,9 @@ from ninja import Router, Schema, Form
 from datetime import date
 from typing import Optional
 
+from notificationmanagement.utils import notify
 from .models import PayCode, LeaveBalance, TimeoffRequest
-from employeemanagement.models import JobProfile
+from employeemanagement.models import JobProfile, ProfileTemplate
 
 router = Router()
 
@@ -47,6 +48,21 @@ def time_off_reques(request, data: TimeOffRequestSchema = Form(...)):
       end_date=data.end_date,
       reason=data.reason
     )
+
+    manager_profile_template = ProfileTemplate.objects.get(
+      unit=jp.profile_template.unit,
+      role__name="Manager"
+    )
+    manager_job_profiles = JobProfile.objects.filter(
+      profile_template=manager_profile_template
+    )
+
+    for mjp in manager_job_profiles:
+      notify(
+        recipient=mjp,
+        verb="An employee requested an time off!",
+        # * Notifiy with email later on
+      )
 
     messages.success(request, f"Successfully requested time off")
     return redirect(redirect_url)

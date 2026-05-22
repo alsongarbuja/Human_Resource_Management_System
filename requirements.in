@@ -4,3 +4,4 @@ djLint
 django-ninja
 mssql-django
 pytz
+celery
