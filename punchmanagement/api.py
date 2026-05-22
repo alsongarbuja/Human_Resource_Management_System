@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect
 from ninja import Router, Schema, Form
 from ninja.errors import HttpError
 
-from employeemanagement.models import EmployeeProfile, JobProfile
+from employeemanagement.models import JobProfile
 from punchmanagement.models import PunchEntry, PayPeriod
 
 router = Router()
@@ -24,7 +24,6 @@ def clock_in_employee(request, data: ClockOutFormSchema = Form(...)):
     job_profile = get_object_or_404(JobProfile, employee__user=request.user, profile_template__unit=request.active_unit)
 
     already_clocked_in = PunchEntry.objects.filter(
-      employee=job_profile.employee,
       job_profile=job_profile,
       clock_out__isnull=True
     ).exists()
@@ -42,7 +41,6 @@ def clock_in_employee(request, data: ClockOutFormSchema = Form(...)):
       raise HttpError(400, "Cannot clock in: No active pay period found for today's date.")
 
     punch = PunchEntry.objects.create(
-      employee=job_profile.employee,
       job_profile=job_profile,
       pay_period=current_pay_period,
       # TODO: fix this timezone
@@ -60,11 +58,9 @@ def clock_out_employee(request, data: ClockOutFormSchema = Form(...)):
 
   redirect_url = data.redirect_url
 
-  employee = get_object_or_404(EmployeeProfile, user=request.user)
-  jobProfile = get_object_or_404(JobProfile, employee=employee, unit=request.active_unit)
+  jobProfile = get_object_or_404(JobProfile, employee__user=request.user, profile_template__unit=request.active_unit)
 
   active_punch = PunchEntry.objects.filter(
-    employee=employee,
     job_profile=jobProfile,
     clock_out__isnull=True
   ).order_by('-clock_in').first()

@@ -115,16 +115,12 @@ class PunchEntry(BaseModel):
     This contains the punch entry data of employee
 
     Fields:
-      - employee: FK (connected employee profile)
       - job_profile: FK (connected job profile)
       - clock_in: DateTime (Timestamp of clock in)
       - clock_out: DateTime (Timestamp of clock out)
       - ip_address?: IPAddress (Ip address of the clock in/out machine)
-      - pay_period: FK (connected pay period)
   """
-  employee = models.ForeignKey(EmployeeProfile, on_delete=models.PROTECT)
   job_profile = models.ForeignKey(JobProfile, on_delete=models.PROTECT)
-  pay_period = models.ForeignKey(PayPeriod, on_delete=models.SET_NULL, null=True)
 
   clock_in = models.DateTimeField(db_index=True)
   clock_out = models.DateTimeField(null=True, blank=True, db_index=True)
@@ -141,5 +137,5 @@ class PunchEntry(BaseModel):
     verbose_name_plural = "Punch Entries"
 
     indexes = [
-      models.Index(fields=["employee", "-clock_in"])
+      models.Index(fields=["job_profile", "-clock_in"])
     ]

@@ -48,6 +48,6 @@ class PayPeriodAdmin(admin.ModelAdmin):
 
 @admin.register(PunchEntry)
 class PunchEntryAdmin(admin.ModelAdmin):
-  list_display=("employee", "clock_in", "clock_out",)
-  search_fields=("employee",)
+  list_display=("job_profile", "clock_in", "clock_out",)
+  search_fields=("job_profile",)
   order=("clock_in", "clock_out",)

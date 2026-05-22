@@ -24,7 +24,6 @@ def get_employee_clock_status_context(user, active_unit_id):
     }
 
   active_punch = PunchEntry.objects.filter(
-    employee=job_profile.employee,
     job_profile=job_profile,
     clock_out__isnull=True
   ).order_by('-clock_in').first()
