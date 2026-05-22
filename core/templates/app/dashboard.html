@@ -1,17 +1,17 @@
 {% extends "admin-base.html" %}
-
-{% block title %}Time Clock Management | Dashboard{% endblock title %}
-
+{% block title %}
+  Time Clock Management | Dashboard
+{% endblock title %}
 {% block content %}
   <div class="border-b border-neutral-200 pb-5">
     <h1 class="text-2xl font-bold tracking-tight text-neutral-900">Dashboard</h1>
     <p class="text-sm text-neutral-500 mt-1">Manage your shifts, view pay periods, and request time off.</p>
   </div>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    {% include "punch/components/_punch-card.html" %}
-    {% include "punch/components/_punch-summary-card.html" %}
-  </div>
-
+  {% if request.role.name != "Manager" %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {% include "punch/components/_punch-card.html" %}
+      {% include "punch/components/_punch-summary-card.html" %}
+    </div>
+  {% endif %}
   {% include "leave/components/_time-off-list.html" %}
 {% endblock %}

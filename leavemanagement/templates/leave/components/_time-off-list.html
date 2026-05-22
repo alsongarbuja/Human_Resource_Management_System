@@ -4,13 +4,15 @@
       <h2 class="text-md font-semibold text-neutral-900">Recent Time Off Requests</h2>
       <p class="text-xs text-neutral-500 mt-0.5">Track your leaves, vacation days, and medical submissions.</p>
     </div>
-    <div>
-      <a href="{% url 'leave:addTimeOff' %}"
-         class="inline-flex items-center justify-center bg-black text-white px-4 py-2 text-sm font-medium rounded-md hover:bg-neutral-900 transition-colors duration-150 gap-2">
-        <i class="fa-solid fa-plus text-xs"></i>
-        <span>Request Time Off</span>
-      </a>
-    </div>
+    {% if request.role.name != "Manager" %}
+      <div>
+        <a href="{% url 'leave:addTimeOff' %}"
+           class="inline-flex items-center justify-center bg-black text-white px-4 py-2 text-sm font-medium rounded-md hover:bg-neutral-900 transition-colors duration-150 gap-2">
+          <i class="fa-solid fa-plus text-xs"></i>
+          <span>Request Time Off</span>
+        </a>
+      </div>
+    {% endif %}
   </div>
   <!-- Clean Responsive Table Container -->
   <div class="overflow-x-auto">

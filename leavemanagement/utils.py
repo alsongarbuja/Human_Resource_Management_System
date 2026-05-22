@@ -18,9 +18,17 @@ def get_employee_time_off_requests_context(user, active_unit_id):
       'timeoff_requests': [],
     }
 
-  timeoff_requests = TimeoffRequest.objects.filter(
-    employee__id=job_profile.id,
-  ).order_by('-start_date')
+  timeoff_requests = []
+
+  if job_profile.role.name == "Manager":
+    employees = JobProfile.objects.filter(unit=active_unit_id)
+    timeoff_requests = TimeoffRequest.objects.filter(
+      employee__in=employees
+    ).order_by('-start_date')
+  else:
+    timeoff_requests = TimeoffRequest.objects.filter(
+      employee__id=job_profile.id,
+    ).order_by('-start_date')
 
   context = {
     'timeoff_requests': list(timeoff_requests),

@@ -12,16 +12,18 @@
           <li>{% include "app/components/_side-nav.html" with to="core:dashboard" text="Dashboard" icon="i" %}</li>
         </ul>
       </div>
-      <div>
-        <span class="px-3 text-xxs font-semibold uppercase tracking-wider text-neutral-500 block mb-2">Time Track</span>
-        <ul class="space-y-1">
-          <li>{% include "app/components/_side-nav.html" with to="punch:clockInOut" text="Clock in / Out" icon="i" %}</li>
-          <li>
-            {% include "app/components/_side-nav.html" with to="leave:timeoffRequests" text="Time off Requests" icon="i" %}
-          </li>
-        </ul>
-      </div>
-      {% if user.role == "Manager" %}
+      {% if request.role.name != "Manager" %}
+        <div>
+          <span class="px-3 text-xxs font-semibold uppercase tracking-wider text-neutral-500 block mb-2">Time Track</span>
+          <ul class="space-y-1">
+            <li>{% include "app/components/_side-nav.html" with to="punch:clockInOut" text="Clock in / Out" icon="i" %}</li>
+            <li>
+              {% include "app/components/_side-nav.html" with to="leave:timeoffRequests" text="Time off Requests" icon="i" %}
+            </li>
+          </ul>
+        </div>
+      {% endif %}
+      {% if request.role.name == "Manager" %}
         <div>
           <span class="px-3 text-xxs font-semibold uppercase tracking-wider text-neutral-500 block mb-2">Management</span>
           <ul class="space-y-1">
@@ -33,11 +35,11 @@
               </a>
             </li>
             <li>
-              <a href="#"
-                 class="flex items-center gap-3 px-3 py-2.5 rounded-md text-neutral-400 hover:text-white hover:bg-neutral-900 font-medium text-sm transition-colors">
+              {% include "app/components/_side-nav.html" with to="leave:timeoffRequests" text="Leave Requests" icon="i" %}
+              {% comment %} <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-md text-neutral-400 hover:text-white hover:bg-neutral-900 font-medium text-sm transition-colors">
                 <i class="fa-solid fa-plane-departure w-5 text-center"></i>
                 <span>Leave Requests</span>
-              </a>
+              </a> {% endcomment %}
             </li>
             <li>
               <a href="#"

@@ -25,10 +25,12 @@ def select_unit(request):
 
   if len(jp) <= 1:
     request.session['active_unit_id'] = int(job_profile[0].unit.id)
+    request.session['active_role_id'] = job_profile[0].role.id
     return redirect("core:dashboard")
 
   if all(p.role.name == 'Manager' for p in jp) and len({p.unit.department_id for p in jp}) == 1:
     request.session['active_unit_id'] = int(job_profile[0].unit.id)
+    request.session['active_role_id'] = job_profile[0].role.id
     return redirect("core:dashboard")
 
   context = {
@@ -44,8 +46,9 @@ def set_active_unit(request):
   After which it redirects to dashboard page
   """
   if request.method == "POST":
-    selected_unit_id = request.POST.get("selected_unit_id")
-    request.session['active_unit_id'] = int(selected_unit_id)
+    selected_unit = request.POST.get("selected_unit")
+    request.session['active_unit_id'] = int(selected_unit.split('-')[0])
+    request.session['active_role_id'] = int(selected_unit.split('-')[1])
     return redirect("core:dashboard")
 
 def dashboard(request):

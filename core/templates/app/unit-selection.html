@@ -23,8 +23,8 @@
           {% for unit_profile in units %}
             <label class="relative block cursor-pointer group">
               <input type="radio"
-                     name="selected_unit_id"
-                     value="{{ unit_profile.unit.id }}"
+                     name="selected_unit"
+                     value="{{ unit_profile.unit.id }}-{{ unit_profile.role.id }}"
                      class="peer sr-only"
                      required
                      {% if forloop.first %}checked{% endif %}>

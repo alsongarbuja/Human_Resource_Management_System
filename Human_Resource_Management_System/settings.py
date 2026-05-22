@@ -66,6 +66,7 @@ MIDDLEWARE = [
 
   # Custom built Middlewares
   'core.middleware.ActiveUnitMiddleware',
+  'core.middleware.ActiveProfileRoleMiddleware',
 ]
 
 ROOT_URLCONF = 'Human_Resource_Management_System.urls'
