@@ -21,11 +21,10 @@ def clock_in_employee(request, data: ClockOutFormSchema = Form(...)):
     """
     redirect_url = data.redirect_url
 
-    employee_profile = get_object_or_404(EmployeeProfile, user=request.user)
-    job_profile = get_object_or_404(JobProfile, employee=employee_profile, unit=request.active_unit)
+    job_profile = get_object_or_404(JobProfile, employee__user=request.user, profile_template__unit=request.active_unit)
 
     already_clocked_in = PunchEntry.objects.filter(
-      employee=employee_profile,
+      employee=job_profile.employee,
       job_profile=job_profile,
       clock_out__isnull=True
     ).exists()
@@ -43,7 +42,7 @@ def clock_in_employee(request, data: ClockOutFormSchema = Form(...)):
       raise HttpError(400, "Cannot clock in: No active pay period found for today's date.")
 
     punch = PunchEntry.objects.create(
-      employee=employee_profile,
+      employee=job_profile.employee,
       job_profile=job_profile,
       pay_period=current_pay_period,
       # TODO: fix this timezone

@@ -12,7 +12,7 @@ def get_employee_time_off_requests_context(user, active_unit_id):
     return {}
 
   try:
-    job_profile = get_object_or_404(JobProfile, employee__user__id=user.id, unit=active_unit_id)
+    job_profile = get_object_or_404(JobProfile, employee__user=user, profile_template__unit_id=active_unit_id)
   except (JobProfile.DoesNotExist):
     return {
       'timeoff_requests': [],
@@ -20,8 +20,8 @@ def get_employee_time_off_requests_context(user, active_unit_id):
 
   timeoff_requests = []
 
-  if job_profile.role.name == "Manager":
-    employees = JobProfile.objects.filter(unit=active_unit_id)
+  if job_profile.profile_template.role.name == "Manager":
+    employees = JobProfile.objects.filter(profile_template__unit_id=active_unit_id)
     timeoff_requests = TimeoffRequest.objects.filter(
       employee__in=employees
     ).order_by('-start_date')

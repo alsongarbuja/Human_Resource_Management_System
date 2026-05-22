@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.contrib.auth.decorators import login_required
 
-from employeemanagement.models import EmployeeProfile, JobProfile
+from employeemanagement.models import EmployeeProfile, JobProfile, ProfileTemplate
 from punchmanagement.utils import get_employee_clock_status_context
 from leavemanagement.utils import get_employee_time_off_requests_context
 
@@ -19,22 +19,15 @@ def select_unit(request):
     else redirects to dashboard page if only one unit or manager in all unit
   """
   employee_profile = get_object_or_404(EmployeeProfile, user=request.user)
-  job_profile = get_list_or_404(JobProfile, employee=employee_profile)
+  job_profiles = get_list_or_404(JobProfile, employee=employee_profile)
 
-  jp = list(job_profile)
-
-  if len(jp) <= 1:
-    request.session['active_unit_id'] = int(job_profile[0].unit.id)
-    request.session['active_role_id'] = job_profile[0].role.id
-    return redirect("core:dashboard")
-
-  if all(p.role.name == 'Manager' for p in jp) and len({p.unit.department_id for p in jp}) == 1:
-    request.session['active_unit_id'] = int(job_profile[0].unit.id)
-    request.session['active_role_id'] = job_profile[0].role.id
+  if len(job_profiles) <= 1 or (all(p.profile_template.role.name == 'Manager' for p in job_profiles) and len({p.profile_template.unit.department_id for p in job_profiles}) == 1):
+    request.session['active_unit_id'] = int(job_profiles[0].profile_template.unit.id)
+    request.session['active_role_id'] = int(job_profiles[0].profile_template.role.id)
     return redirect("core:dashboard")
 
   context = {
-    'units': jp
+    'units': job_profiles
   }
 
   return render(request, "app/unit-selection.html", context)

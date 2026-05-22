@@ -88,6 +88,32 @@ class EmployeeProfile(BaseModel):
     verbose_name = "Employee Profile"
     verbose_name_plural = "Employee Profiles"
 
+# * Profile Template Model
+class ProfileTemplate(BaseModel):
+  """
+    This contains the details of a profile template that can be reused for job profile
+
+    Fields:
+      - role: FK (a one on one relation with role)
+      - unit: FK (a one on one relation with unit)
+      - employee_type: FK (a one on one relation with employee type)
+      - pay_frequency: FK (a one on one relation with pay frequency)
+  """
+  role = models.ForeignKey(Role, on_delete=models.CASCADE)
+  unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+  employee_type = models.ForeignKey(EmployeeType, on_delete=models.CASCADE)
+  pay_frequency = models.ForeignKey(PayFrequency, on_delete=models.CASCADE)
+
+  def __str__(self):
+    return f'{self.role} - {self.unit} | {self.employee_type} : {self.pay_frequency}'
+
+  class Meta(BaseModel.Meta):
+    db_table = "profile_template"
+    verbose_name = "Profile Template"
+    verbose_name_plural = "Profle Templates"
+    unique_together = ("role", "unit", "employee_type", "pay_frequency",)
+
+
 # * Job Profile Model
 class JobProfile(BaseModel):
   """
@@ -95,20 +121,24 @@ class JobProfile(BaseModel):
 
     Fields:
       - employee: FK (a one on one relation with employee profile)
-      - role: FK (a one on one relation with role)
-      - unit: FK (a one on one relation with unit)
-      - employee_type: FK (a one on one relation with employee type)
-      - pay_frequency: FK (a one on one relation with pay frequency)
       - tenure: decimal (auto calculated tenure in years of the employee in the current job profile)
+      - profile_template: FK (connect with profile template)
+      - is_primary: bool (boolean flag to check if this job profile is the primary)
+      - hire_date: date (date of hire for this job profile)
+      - end_date: date | null (date of end of the job profile)
   """
-  employee = models.ForeignKey(EmployeeProfile, on_delete=models.CASCADE)
-  role = models.ForeignKey(Role, on_delete=models.CASCADE)
-  unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
-  employee_type = models.ForeignKey(EmployeeType, on_delete=models.CASCADE)
-  pay_frequency = models.ForeignKey(PayFrequency, on_delete=models.CASCADE)
+  employee = models.ForeignKey(EmployeeProfile, on_delete=models.PROTECT)
+  profile_template = models.ForeignKey(
+    ProfileTemplate,
+    on_delete=models.PROTECT,
+    related_name="job_profile_template",
+  )
   tenure = models.DecimalField(
     max_digits=4, decimal_places=2, default=0.0, null=True, editable=False
   )
+  is_primary = models.BooleanField(default=False)
+  hire_date = models.DateTimeField(blank=False)
+  end_date = models.DateTimeField(blank=True, null=True)
 
   def __str__(self):
     return self.employee.user.username

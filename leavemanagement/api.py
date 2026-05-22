@@ -23,7 +23,7 @@ def time_off_reques(request, data: TimeOffRequestSchema = Form(...)):
     """
     redirect_url = "leave:timeoffRequests"
 
-    jp = get_object_or_404(JobProfile, employee__user__id=request.user.id, unit=request.active_unit)
+    jp = get_object_or_404(JobProfile, employee__user=request.user, profile_template__unit=request.active_unit)
 
     try:
       pay_code = PayCode.objects.get(id=data.leave_type)
