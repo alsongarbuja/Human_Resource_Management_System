@@ -42,7 +42,6 @@ def clock_in_employee(request, data: ClockOutFormSchema = Form(...)):
 
     punch = PunchEntry.objects.create(
       job_profile=job_profile,
-      # TODO: fix this timezone
       clock_in=timezone.now()
     )
 

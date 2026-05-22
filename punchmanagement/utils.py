@@ -32,7 +32,7 @@ def get_employee_clock_status_context(user, active_unit_id):
     'pay_period_start': pay_period.start_date if pay_period else "N/A",
     'pay_period_end': pay_period.end_date if pay_period else "N/A",
     'user_is_clocked_in': active_punch is not None,
-    'clock_in_time': active_punch.clock_in.strftime("%H:%M") if active_punch else None,
+    'clock_in_time': active_punch.clock_in if active_punch else None,
   }
 
   return context

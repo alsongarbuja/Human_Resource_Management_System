@@ -10,7 +10,7 @@
           <span class="w-2.5 h-2.5 rounded-full bg-black animate-pulse"></span>
           <span class="text-xl font-bold text-neutral-900">Clocked In</span>
         </div>
-        <p class="text-xs text-neutral-500">Shift started today at {{ clock_in_time|default:"07:30 AM" }}</p>
+        <p class="text-xs text-neutral-500">Shift started today at {{ clock_in_time|date:"h:i A" }}</p>
       </div>
     {% else %}
       <div class="space-y-1">
