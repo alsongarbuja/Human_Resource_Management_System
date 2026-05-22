@@ -1,0 +1,79 @@
+{% extends "admin-base.html" %}
+{% block title %}
+  Time Clock Management | Time Off Request Add
+{% endblock title %}
+{% block content %}
+  <div class="w-full">
+    <div class="mb-6">
+      <a href="{% url 'leave:timeoffRequests' %}"
+         class="group inline-flex items-center gap-1.5 text-xs font-medium text-[#666666] hover:text-[#111111] transition-colors duration-200">
+        <svg class="w-4 h-4 transform group-hover:-translate-x-0.5 transition-transform duration-200"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to requests
+      </a>
+    </div>
+    <header class="mb-8">
+      <h1 class="text-2xl font-semibold tracking-tight m-0 mb-2">Time Off Request</h1>
+      <p class="text-sm text-[#666666] m-0">Submit a new request for leave approval.</p>
+    </header>
+    <form id="time-off-request-form"
+          method="post"
+          action="/api/v1/leave/time-off-request"
+          novalidate
+          class="bg-white p-6 shadow-sm rounded-xl">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="bg-red-50 border border-red-500 text-red-600 p-3 rounded text-sm mb-6">
+          {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+        </div>
+      {% endif %}
+      <div class="flex flex-col gap-2 mb-4">
+        <label for="{{ form.leave_type.id_for_label }}"
+               class="text-[13px] font-medium tracking-wider uppercase">Leave Type</label>
+        <div class="relative">{{ form.leave_type }}</div>
+        {% if form.leave_type.errors %}<div class="text-xs text-red-600 mt-1">{{ form.leave_type.errors }}</div>{% endif %}
+      </div>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div class="flex flex-col gap-2">
+          <label for="{{ form.start_date.id_for_label }}"
+                 class="text-[13px] font-medium tracking-wider uppercase">Start Date</label>
+          {{ form.start_date }}
+          {% if form.start_date.errors %}<div class="text-xs text-red-600 mt-1">{{ form.start_date.errors }}</div>{% endif %}
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="{{ form.end_date.id_for_label }}"
+                 class="text-[13px] font-medium tracking-wider uppercase">End Date</label>
+          {{ form.end_date }}
+          {% if form.end_date.errors %}<div class="text-xs text-red-600 mt-1">{{ form.end_date.errors }}</div>{% endif %}
+        </div>
+      </div>
+      <div class="flex flex-col gap-2 mb-4">
+        <label for="{{ form.reason.id_for_label }}"
+               class="text-[13px] font-medium tracking-wider uppercase">Reason</label>
+        {{ form.reason }}
+        {% if form.reason.errors %}<div class="text-xs text-red-600 mt-1">{{ form.reason.errors }}</div>{% endif %}
+      </div>
+      <div class="pt-2 flex justify-end items-center gap-3">
+        <a href="{% url 'leave:timeoffRequests' %}"
+           class="font-medium text-[#666666] hover:text-[#111111] px-6 py-3 transition-colors duration-200">Cancel</a>
+        {% include "components/button.html" with text="Submit Request" type="submit" class="bg-[#111111] hover:bg-[#333333] text-white text-sm font-medium px-6 py-3 border border-[#111111] hover:border-[#333333] w-fit transition-all duration-200" %}
+      </div>
+    </form>
+  </div>
+  <script>
+        document.querySelectorAll('input, select, textarea').forEach(element => {
+            element.className = "w-full p-3 text-sm bg-transparent border border-[#e5e5e5] focus:border-[#111111] rounded transition-colors duration-200 outline-none font-sans";
+            if (element.tagName === 'TEXTAREA') {
+                element.className += " resize-y min-h-[100px]";
+            }
+        });
+  </script>
+{% endblock content %}

@@ -6,4 +6,5 @@ app_name = "leave"
 
 urlpatterns = [
   path("time-off-requests/", views.timeOffRequests, name="timeoffRequests"),
+  path("time-off-request-add/", views.addTimeoffRequests, name="addTimeOff"),
 ]

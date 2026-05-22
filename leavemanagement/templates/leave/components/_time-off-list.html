@@ -5,7 +5,7 @@
       <p class="text-xs text-neutral-500 mt-0.5">Track your leaves, vacation days, and medical submissions.</p>
     </div>
     <div>
-      <a href="#"
+      <a href="{% url 'leave:addTimeOff' %}"
          class="inline-flex items-center justify-center bg-black text-white px-4 py-2 text-sm font-medium rounded-md hover:bg-neutral-900 transition-colors duration-150 gap-2">
         <i class="fa-solid fa-plus text-xs"></i>
         <span>Request Time Off</span>
@@ -25,24 +25,18 @@
       </thead>
       <tbody class="divide-y divide-neutral-100 text-neutral-700">
         {% for request in timeoff_requests %}
-          {{ request }}
           <tr class="hover:bg-neutral-50/50 transition-colors duration-150">
-            {% comment %} <td class="py-4 px-6 font-medium text-neutral-900">
-              {{ request.pay_code|default:"Vacation / Paid Time Off" }}
-            </td> {% endcomment %}
-            {% comment %} <td class="py-4 px-6 text-neutral-500">
+            <td class="py-4 px-6 font-medium text-neutral-900">{{ request.leave_type|default:"Vacation / Paid Time Off" }}</td>
+            <td class="py-4 px-6 text-neutral-500">
               {{ request.start_date|default:"June 12, 2026" }} – {{ request.end_date|default:"June 15, 2026" }}
-            </td> {% endcomment %}
-            {% comment %} <td class="py-4 px-6 text-neutral-600">
-              {{ request.days|default:"4 Days" }}
-            </td> {% endcomment %}
+            </td>
+            <td class="py-4 px-6 text-neutral-600">{{ request.days|default:"Default Days" }}</td>
             <td class="py-4 px-6">
-              <!-- Black tag for approved, neutral gray for pending/review -->
-              {% comment %} {% if request.status == 'Approved' or not request.status %}
+              {% if request.status == 'Approved' or not request.status %}
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-black text-white">Approved</span>
               {% else %}
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-neutral-100 text-neutral-800">Pending</span>
-              {% endif %} {% endcomment %}
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-neutral-100 text-neutral-800">{{ request.status }}</span>
+              {% endif %}
             </td>
           </tr>
         {% empty %}

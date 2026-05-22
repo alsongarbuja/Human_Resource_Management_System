@@ -40,16 +40,20 @@ class TimeoffRequest(BaseModel):
   reason = models.TextField(blank=True)
   start_date = models.DateTimeField()
   end_date = models.DateTimeField()
-  stauts = models.TextField(choices={
-    'Requested': 'Requested',
-    'Approved': 'Approved',
-    'Rejected': 'Rejected',
-  })
+  status = models.CharField(
+    max_length=20,
+    choices={
+      'Requested': 'Requested',
+      'Approved': 'Approved',
+      'Rejected': 'Rejected',
+    },
+    default='Requested',
+  )
   employee = models.ForeignKey(JobProfile, on_delete=models.PROTECT)
   # TODO: Add attachments
 
   def __str__(self):
-    return f"Time of request by {self.employee.user.username}"
+    return f"Time of request by {self.employee.employee.user.username}"
 
   class Meta(BaseModel.Meta):
     db_table = "timeoff_request"
@@ -66,7 +70,7 @@ class LeaveBalance(BaseModel):
       - balance: Float (actual balance)
       - job_profile: FK (connected job profile the balaance)
   """
-  pay_code = models.ForeignKey(PayCode, on_delete=models.PROTECT)
+  pay_code = models.ForeignKey(PayCode, on_delete=models.PROTECT, related_name='pay_code')
   balance = models.FloatField(blank=False)
   job_profile = models.ForeignKey(JobProfile, on_delete=models.PROTECT)
 
