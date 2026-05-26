@@ -1,0 +1,105 @@
+{% extends "admin-base.html" %}
+{% block title %}
+  Time Clock Management | Scan Clock In/Out
+{% endblock title %}
+
+{% block extra_head %}
+  <script src="https://unpkg.com/@zxing/library@latest"></script>
+  <style>
+    #scanner-container { width: 100%; max-width: 600px; margin: 0 auto; position: relative; border-radius: 12px; overflow: hidden; background: #000; }
+
+    #scanner-container { width: 100%; height: 150px; }
+
+    #msg-overlay { display: none; font-size: 24px; padding: 40px; font-weight: bold; background: white; border-radius: 12px; }
+  </style>
+{% endblock extra_head %}
+
+{% block content %}
+  {% if messages %}
+    <ul class="messages" style="list-style: none; padding: 0;">
+      {% for message in messages %}
+        <li style="padding: 10px;
+                   margin-bottom: 10px;
+                   border-radius: 4px;
+                   color: white;
+                   background-color: {% if message.tags == 'error' %}#f44336{% else %}#4caf50{% endif %}">
+          {{ message }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <div class="border-b border-neutral-200 pb-5">
+    <h1 class="text-2xl font-bold tracking-tight text-neutral-900">Clock In / Out</h1>
+    <p class="text-sm text-neutral-500 mt-1">Have a great day at work.</p>
+  </div>
+  <form>
+    <div id="kiosk-box" style="max-width: 600px; margin: 0 auto;">
+      <video id="scanner-container"></video>
+      <div id="msg-overlay"></div>
+    </div>
+    {% csrf_token %}
+  </form>
+
+  <script>
+    function getCsrfToken() {
+      // Try hidden input first
+      const input = document.querySelector('[name=csrfmiddlewaretoken]');
+      if (input?.value) return input.value;
+
+      // Fallback to cookie
+      const match = document.cookie.match(/csrftoken=([^;]+)/);
+      return match ? decodeURIComponent(match[1]) : null;
+    }
+
+    const csrftoken = getCsrfToken();
+
+    const codeReader = new ZXing.BrowserBarcodeReader();
+    const videoElement = document.getElementById('scanner-container');
+
+    const hints = new Map();
+    hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, [
+        ZXing.BarcodeFormat.CODE_128,
+        ZXing.BarcodeFormat.UPC_A,
+        ZXing.BarcodeFormat.EAN_13
+    ]);
+
+    function startKioskScanner() {
+        codeReader.decodeFromVideoDevice(undefined, videoElement, (result, err) => {
+            if (result) {
+              console.log("Barcode detected:", result.text);
+
+              const formData = new FormData();
+              formData.append('so_id', result.text);
+
+              fetch("/api/v1/punch/scan-clock-in-out", {
+                  method: "POST",
+                  headers: {
+                    'X-CSRFToken': csrftoken,
+                  },
+                  credentials: 'include',
+                  body: formData,
+                }
+              ).then(response => response.json())
+            .then(data => {
+                const overlay = document.getElementById('msg-overlay');
+                if (data.success) {
+                    overlay.innerText = data.message;
+                    overlay.style.color = "green";
+                } else {
+                    overlay.innerText = data.message || "An error occurred";
+                    overlay.style.color = "red";
+                }
+            })
+            .catch(error => {
+                console.error("Fetch Error:", error);
+            });
+            }
+            if (err && !(err instanceof ZXing.NotFoundException)) {
+                console.error("Camera Error:", err);
+            }
+        }, hints);
+    }
+
+    startKioskScanner()
+  </script>
+{% endblock content %}

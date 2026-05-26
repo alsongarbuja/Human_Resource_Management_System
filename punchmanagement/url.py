@@ -6,4 +6,5 @@ app_name = "punch"
 
 urlpatterns = [
   path("clock-in-out/", views.clockInOut, name="clockInOut"),
+  path("scan-clock-in-out/", views.scanClockInOut, name="scanClockInOut"),
 ]
