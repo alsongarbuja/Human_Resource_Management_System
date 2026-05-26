@@ -103,6 +103,8 @@ class ProfileTemplate(BaseModel):
   unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
   employee_type = models.ForeignKey(EmployeeType, on_delete=models.CASCADE)
   pay_frequency = models.ForeignKey(PayFrequency, on_delete=models.CASCADE)
+  shift_start_time = models.TimeField(null=True, blank=True)
+  early_clock_in_buffer_min = models.IntegerField(default=5)
 
   def __str__(self):
     return f'{self.role} - {self.unit} | {self.employee_type} : {self.pay_frequency}'

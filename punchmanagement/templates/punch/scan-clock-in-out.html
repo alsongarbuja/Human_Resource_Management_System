@@ -32,21 +32,19 @@
     <h1 class="text-2xl font-bold tracking-tight text-neutral-900">Clock In / Out</h1>
     <p class="text-sm text-neutral-500 mt-1">Have a great day at work.</p>
   </div>
-  <form>
+  <form id="kiosk-form" method="POST" action="/api/v1/punch/scan-clock-in-out">
+    {% csrf_token %}
+    <input type="hidden" id="so_id_input" name="so_id" value="">
     <div id="kiosk-box" style="max-width: 600px; margin: 0 auto;">
       <video id="scanner-container"></video>
-      <div id="msg-overlay"></div>
     </div>
-    {% csrf_token %}
   </form>
 
   <script>
     function getCsrfToken() {
-      // Try hidden input first
       const input = document.querySelector('[name=csrfmiddlewaretoken]');
       if (input?.value) return input.value;
 
-      // Fallback to cookie
       const match = document.cookie.match(/csrftoken=([^;]+)/);
       return match ? decodeURIComponent(match[1]) : null;
     }
@@ -55,6 +53,8 @@
 
     const codeReader = new ZXing.BrowserBarcodeReader();
     const videoElement = document.getElementById('scanner-container');
+    const kioskForm = document.getElementById('kiosk-form');
+    const soIdInput = document.getElementById('so_id_input');
 
     const hints = new Map();
     hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, [
@@ -67,32 +67,8 @@
         codeReader.decodeFromVideoDevice(undefined, videoElement, (result, err) => {
             if (result) {
               console.log("Barcode detected:", result.text);
-
-              const formData = new FormData();
-              formData.append('so_id', result.text);
-
-              fetch("/api/v1/punch/scan-clock-in-out", {
-                  method: "POST",
-                  headers: {
-                    'X-CSRFToken': csrftoken,
-                  },
-                  credentials: 'include',
-                  body: formData,
-                }
-              ).then(response => response.json())
-            .then(data => {
-                const overlay = document.getElementById('msg-overlay');
-                if (data.success) {
-                    overlay.innerText = data.message;
-                    overlay.style.color = "green";
-                } else {
-                    overlay.innerText = data.message || "An error occurred";
-                    overlay.style.color = "red";
-                }
-            })
-            .catch(error => {
-                console.error("Fetch Error:", error);
-            });
+              soIdInput.value = result.text;
+              kioskForm.submit();
             }
             if (err && !(err instanceof ZXing.NotFoundException)) {
                 console.error("Camera Error:", err);

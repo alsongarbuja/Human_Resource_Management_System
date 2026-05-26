@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from ninja import Router, Schema, Form
 from ninja.errors import HttpError
+from datetime import datetime, timedelta
 
 from employeemanagement.models import JobProfile, EmployeeProfile
 from punchmanagement.models import PunchEntry, PayPeriod
@@ -91,9 +92,10 @@ def clock_in_out_via_scan(request, data: ScanClockInOutSchema = Form(...)):
       clock_out__isnull=True
     ).order_by('-clock_in').first()
 
+    msg = ""
 
     if not active_punch:
-      today = timezone.now().date()
+      today = timezone.now()
       current_pay_period = PayPeriod.objects.filter(
         start_date__lte=today,
         end_date__gte=today
@@ -102,19 +104,27 @@ def clock_in_out_via_scan(request, data: ScanClockInOutSchema = Form(...)):
       if not current_pay_period:
         raise HttpError(400, "Cannot clock in: No active pay period found for today's date.")
 
+      dummy_today = today
+      shift_datetime = datetime.combine(dummy_today, job_profile.profile_template.shift_start_time)
+
+      window_open_datetime = shift_datetime - timedelta(minutes=job_profile.profile_template.early_clock_in_buffer_min)
+      if timezone.localtime().now().time() < window_open_datetime.time():
+        raise HttpError(400, f"Too early to clock in. Your can start clock in from {window_open_datetime.strftime('%H: %M')}")
+
       punch = PunchEntry.objects.create(
         job_profile=job_profile,
         clock_in=timezone.now()
       )
 
-      msg = f"Successfully clocked in at {punch.clock_in.strftime('%H:%M')}."
+      msg = f"Successfully clocked in at {timezone.localtime(punch.clock_in).strftime('%H:%M')}."
     else:
       active_punch.clock_out = timezone.now()
       active_punch.save()
 
-      msg = f"Successfully clocked out at {active_punch.clock_out.strftime('%H:%M')}"
+      msg = f"Successfully clocked out at {timezone.localtime(active_punch.clock_out).strftime('%H:%M')}"
 
     messages.success(request, msg)
-    return {"message": msg}
   except Exception as err:
-    print(err)
+    messages.error(request, err)
+
+  return redirect("punch:scanClockInOut")
