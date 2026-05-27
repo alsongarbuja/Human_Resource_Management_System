@@ -22,8 +22,9 @@
           {% if request.role.name == "Manager" %}<th class="py-3 px-6">Employee</th>{% endif %}
           <th class="py-3 px-6">Leave Type</th>
           <th class="py-3 px-6">Dates</th>
-          <th class="py-3 px-6">Total Days</th>
+          <th class="py-3 px-6">Total Hours</th>
           <th class="py-3 px-6">Status</th>
+          {% if request.role.name == "Manager" %}<th class="py-3 px-6">Actions</th>{% endif %}
         </tr>
       </thead>
       <tbody class="divide-y divide-neutral-100 text-neutral-700">
@@ -32,11 +33,11 @@
             {% if request.role.name == "Manager" %}
               <td class="py-4 px-6 font-medium text-neutral-900">{{ t_request.employee.employee.user.username }}</td>
             {% endif %}
-            <td class="py-4 px-6 font-medium text-neutral-900">{{ t_request.leave_type|default:"Vacation / Paid Time Off" }}</td>
+            <td class="py-4 px-6 font-medium text-neutral-900">{{ t_request.type|default:"PTO" }}</td>
             <td class="py-4 px-6 text-neutral-500">
-              {{ t_request.start_date|default:"June 12, 2026" }} – {{ t_request.end_date|default:"June 15, 2026" }}
+              {{ t_request.start_date|default:"-" }} – {{ t_request.end_date|default:"-" }}
             </td>
-            <td class="py-4 px-6 text-neutral-600">{{ t_request.days|default:"Default Days" }}</td>
+            <td class="py-4 px-6 text-neutral-600">{{ t_request.days|default:"-" }}</td>
             <td class="py-4 px-6">
               {% if t_request.status == 'Approved' or not t_request.status %}
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-black text-white">Approved</span>
@@ -44,9 +45,14 @@
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-neutral-100 text-neutral-800">{{ t_request.status }}</span>
               {% endif %}
             </td>
+            {% if request.role.name == "Manager" %}
+              <td class="py-4 px-6 font-medium text-neutral-900 flex items-center align-center gap-2">
+                {% include "components/button.html" with text="Approve" class="bg-green-800 text-white rounded-md w-fit" %}
+                {% include "components/button.html" with text="Deny" class="bg-red-800 text-white rounded-md w-fit" %}
+              </td>
+            {% endif %}
           </tr>
         {% empty %}
-          <!-- Fallback message if context list is completely empty -->
           <tr>
             <td colspan="4" class="py-8 text-center text-sm text-neutral-400">No recent time off records found.</td>
           </tr>

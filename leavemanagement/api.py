@@ -6,7 +6,7 @@ from datetime import date
 from typing import Optional
 
 from notificationmanagement.utils import notify
-from .models import PayCode, LeaveBalance, TimeoffRequest
+from .models import LeaveType, LeaveBalance, TimeoffRequest
 from employeemanagement.models import JobProfile, ProfileTemplate
 
 router = Router()
@@ -14,7 +14,7 @@ router = Router()
 class TimeOffRequestSchema(Schema):
   start_date: date
   end_date: date
-  leave_type: int
+  type: int
   reason: Optional[str] = None
 
 @router.post("/time-off-request")
@@ -27,8 +27,8 @@ def time_off_reques(request, data: TimeOffRequestSchema = Form(...)):
     jp = get_object_or_404(JobProfile, employee__user=request.user, profile_template__unit=request.active_unit)
 
     try:
-      pay_code = PayCode.objects.get(id=data.leave_type)
-    except PayCode.DoesNotExist:
+      leave_type = LeaveType.objects.get(id=data.type)
+    except LeaveType.DoesNotExist:
       messages.error(request, "Selected leave type is invalid.")
       return redirect(redirect_url)
 
@@ -43,7 +43,7 @@ def time_off_reques(request, data: TimeOffRequestSchema = Form(...)):
 
     TimeoffRequest.objects.create(
       employee=jp,
-      leave_type=pay_code,
+      type=leave_type,
       start_date=data.start_date,
       end_date=data.end_date,
       reason=data.reason

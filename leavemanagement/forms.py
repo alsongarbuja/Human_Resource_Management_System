@@ -3,7 +3,7 @@ from django import forms
 from .models import LeaveBalance
 
 class TimeOffRequestForm(forms.Form):
-  leave_type = forms.ChoiceField(choices=[])
+  type = forms.ChoiceField(choices=[])
   start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
   end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
   reason = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Provide brief details...'}))
@@ -17,8 +17,8 @@ class TimeOffRequestForm(forms.Form):
       available_balances = LeaveBalance.objects.filter(
         job_profile=jp,
         balance__gt=0,
-      ).select_related('pay_code')
+      ).select_related('type')
 
-    self.fields['leave_type'].choices = [
-      (lb.pay_code.id, str(lb.pay_code)) for lb in available_balances
-    ]
+      self.fields['type'].choices = [
+        (lb.type.id, str(lb.type.code)) for lb in available_balances
+      ]

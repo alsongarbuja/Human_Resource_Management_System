@@ -1,8 +1,8 @@
 from django.db import models
 
 from core.models import BaseModel
+from leavemanagement.models import LeaveType
 
-# * Tenure Model
 class Tenure(BaseModel):
   """
     This model contains details related to tenure
@@ -24,16 +24,43 @@ class Tenure(BaseModel):
     verbose_name = "Tenure"
     verbose_name_plural = "Tenures"
 
-# * Accrual Rate
+class AccrualStrategy(BaseModel):
+  """
+    Different strategy of accrual
+
+    Fields:
+      - leave_type: FK (type of leave)
+      - type: Enum (type of accrual strategy)
+  """
+  leave_type = models.ForeignKey(
+    LeaveType,
+    on_delete=models.SET_NULL,
+    null=True,
+  )
+  type = models.CharField(max_length=20, choices={
+    'fixed': 'fixed',
+    'variable': 'variable',
+  })
+
+  def __str__(self):
+    return f"Strategy ({self.leave_type})"
+
+  class Meta(BaseModel.Meta):
+    db_table = "accrual_strategy"
+    verbose_name = "Accrual Strategy"
+    verbose_name_plural = "Accrual Strategies"
+
 class Accrual(BaseModel):
   """
     This model contains details related to accrual rate
 
     Fields:
-      - tenure: FK (connected tenure)
+      - strategy: FK (connected strategy)
+      - tenure?: FK (connected tenure)
       - accrual_rate: float (accrual rate)
   """
-  tenure = models.ForeignKey(Tenure, on_delete=models.PROTECT)
+  strategy = models.ForeignKey(AccrualStrategy, on_delete=models.SET_NULL, null=True)
+  tenure = models.ForeignKey(Tenure, on_delete=models.SET_NULL, null=True, blank=True)
   accrual_rate = models.FloatField(default=0.0)
 
   def __str__(self):

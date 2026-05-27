@@ -2,7 +2,6 @@
 {% block title %}
   Time Clock Management | Scan Clock In/Out
 {% endblock title %}
-
 {% block extra_head %}
   <script src="https://unpkg.com/@zxing/library@latest"></script>
   <style>
@@ -13,7 +12,6 @@
     #msg-overlay { display: none; font-size: 24px; padding: 40px; font-weight: bold; background: white; border-radius: 12px; }
   </style>
 {% endblock extra_head %}
-
 {% block content %}
   {% if messages %}
     <ul class="messages" style="list-style: none; padding: 0;">
@@ -32,14 +30,16 @@
     <h1 class="text-2xl font-bold tracking-tight text-neutral-900">Clock In / Out</h1>
     <p class="text-sm text-neutral-500 mt-1">Have a great day at work.</p>
   </div>
-  <form id="kiosk-form" method="POST" action="/api/v1/punch/scan-clock-in-out">
+  <form id="kiosk-form"
+        method="POST"
+        action="/api/v1/punch/scan-clock-in-out">
     {% csrf_token %}
     <input type="hidden" id="so_id_input" name="so_id" value="">
     <div id="kiosk-box" style="max-width: 600px; margin: 0 auto;">
-      <video id="scanner-container"></video>
+      <video id="scanner-container">
+      </video>
     </div>
   </form>
-
   <script>
     function getCsrfToken() {
       const input = document.querySelector('[name=csrfmiddlewaretoken]');
@@ -64,16 +64,16 @@
     ]);
 
     function startKioskScanner() {
-        codeReader.decodeFromVideoDevice(undefined, videoElement, (result, err) => {
-            if (result) {
-              console.log("Barcode detected:", result.text);
-              soIdInput.value = result.text;
-              kioskForm.submit();
-            }
-            if (err && !(err instanceof ZXing.NotFoundException)) {
-                console.error("Camera Error:", err);
-            }
-        }, hints);
+      codeReader.decodeFromVideoDevice(undefined, videoElement, (result, err) => {
+        if (result) {
+          console.log("Barcode detected:", result.text);
+          soIdInput.value = result.text;
+          kioskForm.submit();
+        }
+        if (err && !(err instanceof ZXing.NotFoundException)) {
+            console.error("Camera Error:", err);
+        }
+      }, hints);
     }
 
     startKioskScanner()

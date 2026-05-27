@@ -36,9 +36,9 @@
         </div>
       {% endif %}
       <div class="flex flex-col gap-2 mb-4">
-        <label for="{{ form.leave_type.id_for_label }}"
+        <label for="{{ form.type.id_for_label }}"
                class="text-[13px] font-medium tracking-wider uppercase">Leave Type</label>
-        <div class="relative">{{ form.leave_type }}</div>
+        <div class="relative">{{ form.type }}</div>
         {% if form.leave_type.errors %}<div class="text-xs text-red-600 mt-1">{{ form.leave_type.errors }}</div>{% endif %}
       </div>
       <div class="grid grid-cols-2 gap-4 mb-4">
