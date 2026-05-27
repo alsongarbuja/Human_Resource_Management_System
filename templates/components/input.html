@@ -1,24 +1,17 @@
 {% comment %} Component for reusable form field {% endcomment %}
 <div class="w-full">
   {% if label %}
-    <label for="{{ id }}" class="block text-sm font-medium text-gray-700 mb-1">
-      {{ label }}
-    </label>
+    <label for="{{ id }}"
+           class="block text-sm font-medium text-zinc-300 mb-2 tracking-wide">{{ label }}</label>
   {% endif %}
-
-  <div class="relative rounded-md shadow-sm">
-    <input
-      id="{{ id }}"
-      name="{{ name }}"
-      type="{{ type|default:'text' }}"
-      placeholder="{{ placeholder }}"
-      value="{{ value|default:'' }}"
-      {% if required %}required{% endif %}
-      class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black text-sm transition duration-150"
-    >
+  <div class="relative rounded-xl shadow-sm">
+    <input id="{{ id }}"
+           name="{{ name }}"
+           type="{{ type|default:'text' }}"
+           placeholder="{{ placeholder }}"
+           value="{{ value|default:'' }}"
+           {% if required %}required{% endif %}
+           class="appearance-none block w-full px-4 py-3 bg-zinc-900/80 border border-zinc-800 text-zinc-100 rounded-xl placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-400 focus:border-zinc-400 text-sm transition duration-150 ease-in-out">
   </div>
-
-  {% if error %}
-    <p class="mt-1.5 text-sm text-red-600">{{ error }}</p>
-  {% endif %}
+  {% if error %}<p class="mt-2 text-sm text-red-400 font-medium tracking-wide">{{ error }}</p>{% endif %}
 </div>

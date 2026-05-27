@@ -1,22 +1,22 @@
-<div class="bg-white border border-neutral-200 rounded-xl p-6 flex flex-col justify-between shadow-sm">
+<div class="bg-zinc-900/50 border border-zinc-800/80 rounded-xl p-6 flex flex-col justify-between shadow-2xl shadow-black/40">
   <div>
-    <div class="flex items-center justify-between text-neutral-400 mb-4">
+    <div class="flex items-center justify-between text-neutral-300 mb-4">
       <span class="text-xs font-semibold uppercase tracking-wider">Shift Status ({{ request.active_unit.name }})</span>
       <i class="fa-solid fa-clock-rotate-left text-sm"></i>
     </div>
     {% if user_is_clocked_in %}
       <div class="space-y-1">
         <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-black animate-pulse"></span>
-          <span class="text-xl font-bold text-neutral-900">Clocked In</span>
+          <span class="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"></span>
+          <span class="text-xl font-bold text-neutral-300">Clocked In</span>
         </div>
-        <p class="text-xs text-neutral-500">Shift started today at {{ clock_in_time|date:"h:i A" }}</p>
+        <p class="text-xs text-neutral-400">You clocked in at {{ clock_in_time|date:"h:i A" }}</p>
       </div>
     {% else %}
       <div class="space-y-1">
         <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-neutral-300"></span>
-          <span class="text-xl font-bold text-neutral-400">Clocked Out</span>
+          <span class="w-2.5 h-2.5 rounded-full bg-green-300"></span>
+          <span class="text-xl font-bold text-neutral-200">Clocked Out</span>
         </div>
         <p class="text-xs text-neutral-500">You are currently off the clock.</p>
       </div>

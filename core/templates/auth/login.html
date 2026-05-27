@@ -1,46 +1,39 @@
 {% extends "base.html" %}
 {% load static %}
-
-{% block title %}Time Clock Management | Login{% endblock title %}
-
+{% block title %}
+  Time Clock Management | Login
+{% endblock title %}
 {% block extra_head %}
   <script src="{% static 'core/js/form.js' %}"></script>
 {% endblock extra_head %}
-
 {% block main_content %}
-  <main class="h-screen flex flex-col justify-center px-8 bg-gray-200">
-    <div class="sm:mx-auto sm:w-full sm:max-w-md">
-      <h2 class="text-center text-3xl font-extrabold tracking-tight text-gray-900">
+  <main class="h-screen flex flex-col justify-center px-6 bg-zinc-950 text-zinc-50 relative overflow-hidden">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[300px] bg-gradient-to-b from-zinc-800/20 to-transparent blur-3xl pointer-events-none">
+    </div>
+    <div class="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
+      <h2 class="text-center text-4xl font-semibold tracking-tight bg-gradient-to-b from-white to-zinc-400 bg-clip-text text-transparent">
         Welcome back
       </h2>
-      <p class="mt-2 text-center text-sm text-gray-600">
-        Please sign in to your account
-      </p>
+      <p class="mt-2 text-center text-sm text-zinc-400 font-light tracking-wide">Please sign in to your account</p>
     </div>
-
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="bg-white py-8 px-4 shadow-sm border border-gray-100 sm:rounded-xl sm:px-10">
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
+      <div class="bg-zinc-900/50 backdrop-blur-md py-8 px-4 border border-zinc-800/80 sm:rounded-2xl sm:px-10 shadow-2xl shadow-black/40">
         <form class="space-y-6" method="POST">
           {% csrf_token %}
-
           {% if form.non_field_errors %}
-            <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded">
+            <div class="bg-red-950/40 border border-red-500/30 p-4 rounded-xl backdrop-blur-sm">
               <div class="flex">
-                <div class="text-sm text-red-700">
-                  {% for error in form.non_field_errors %}
-                    <p>{{ error }}</p>
-                  {% endfor %}
+                <div class="text-sm text-red-400 font-medium tracking-wide">
+                  {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
                 </div>
               </div>
             </div>
           {% endif %}
-
-          {% include 'components/input.html'  with id='username' name='username' label='User ID / Username' placeholder='Enter your user ID' required=True error=form.username.errors.0 %}
-          {% include 'components/input.html'  with id='password' name='password' label='Password' type='password' placeholder='Enter your password' required=True error=form.password.errors.0 %}
-
-          {% include "components/button.html" with text='Sign In' type='submit' class="py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-950 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition duration-150" %}
+          {% include "components/input.html" with id="username" name="username" label="User ID / Username" placeholder="Enter your user ID" required=True error=form.username.errors.0 %}
+          {% include "components/input.html" with id="password" name="password" label="Password" type="password" placeholder="Enter your password" required=True error=form.password.errors.0 %}
+          {% include "components/button.html" with text="Sign In" type="submit" class="w-full py-3 px-4 border border-zinc-800 rounded-xl shadow-lg text-sm font-medium text-zinc-950 bg-white hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:ring-white transition-all duration-200 ease-in-out font-semibold" %}
         </form>
       </div>
     </div>
   </main>
-{% endblock %}
+{% endblock main_content %}
